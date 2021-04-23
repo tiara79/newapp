@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+<!-- 0414 -->
+{% extends 'base.html' %}
+{% load newapp_filter %}
+<head>
+    <meta charset="UTF-8">
+    <title>질문목록페이지</title>
+</head>
+<body>
+{% block content %}
+<!-- settings.py 안에 STATIC_URL = '/static/'
+STATICFILES_DIRS =[BASE_DIR/ 'static',] 경로 설정 후  -->
+<!-- C:\projects\jangosite\static 폴더안에 bootstrap.min.css 파일 불러옴 21/04/13-->
+{% load static %}
+<link rel ="stylesheet" type="text/css" href="{% static '/bootstrap.min.css' %}" >
+<div class="container my-3">
+  <!-- td 홀수 라인에 색상변화됨: table-striped -->
+  <table class="table table-striped">
+    <thead>
+    <!-- bootstrap에서 기본 제공하는 class="thead-dark"은 class="table"가 있어야지만 적용된다.  -->
+      <tr class="table-danger">
+        <th> 글 번 호 </th>
+        <th> 제    목 </th>
+        <th> 글 쓴 이 </th>
+        <th> 작성 일자 </th>
+      </tr>
+    </thead>
+    <tbody>
+    <!-- view.py의 context = {'question_list1': question_list} 의 key값을 가져옴 -->
+    {% if question_list1  %}
+    {% for question in question_list1 %}
+    <!-- /newapp/{question.id}의 question은 for문의 question -->
+    <!-- id는 디장고 litedb에서 자동부여 되는것, 두개의 괄호는 정해진 문법 -->
+    <!-- <li><a href="/newapp/{{question.id}}">{{question.id}} {{question.subject}}</a></li>-->
+
+     <!-- 게시물 공식 -->
+     <!-- 게시글 번호 = 전체 게시물 개수 - 시작 인덱스 - 현재 인덱스 +1   -->
+     <tr class="table-sussess">
+         <td>{{ question_list1.paginator.count|sub:question_list1.start_index|sub:forloop.counter0|add:1 }}</td>
+
+          <!-- <td>{{ forloop.counter}}</td>-->
+          <!--21/04/13 newapp/urls.py 에서 detail 별칭 부여 후 url(question.id) 작성   -->
+         <td><a href="{% url 'newapp:detail' question.id %}" >{{question.subject}}</a>
+         {% if question.answer_set.count > 0 %}
+         <span class="text-danger small ml-2">{{ question.answer_set.count }}</span>
+         {% endif %}
+         </td>
+         <td>{{ question.author_username}}</td>
+         <td>{{ question.create_date}}</td>
+     </tr>
+    {% endfor %}
+    {% else %}
+     <tr>
+        <td colspan="3">질문이 없습니다.</td>
+     </tr>
+    {% endif %}
+   </tbody>
+  <!-- [Edit 21/04/15 ] 페이징 처리 추가 -->
+  </table>
+    <ul class="pagination justify-content-center">
+      {% if question_list1.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ question_list1.previous_page_number }}">이전</a>
+      </li>
+      {% else %}
+      <li class="page-item disabled" >
+        <a class="page-link" href="#" tabindex="-1" aria-disabled="true" >이전</a>
+      </li>
+      {% endif %}
+      {% for page_number in question_list1.paginator.page_range %}
+      <!-- 현재 페이지를 기준으로 좌,우 add:() 숫자만큼 보이게 함 -->
+      {% if page_number >= question_list1.number|add:-2 and page_number <= question_list1.number|add:2 %}
+        {%if page_number == question_list1.number %}
+          <!-- from django.core.paginator import Paginator의 .number : 현재 페이지 번호 -->
+          <li class="page-item active" aria-current="page">
+              <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+          </li>
+          {% else %}
+          <li class="page-item" >
+              <a class="page-link" href="?page={{ page_number }}" >{{ page_number }}</a>
+          </li>
+        {% endif %}
+      {% endif %}
+      {% endfor %}
+      {% if question_list1.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ question_list1.next_page_number }}">다음</a>
+      </li>
+      {% else %}
+      <li class="page-item disabled" >
+        <a class="page-link" href="#" tabindex="-1" aria-disabled="true" >다음</a>
+      </li>
+      {% endif %}
+    </ul>
+    <a href="{% url 'newapp:question_create' %}" class="btn btn-light">질문등록</a>
+</div>
+{% endblock %}
+</body>
+</html>

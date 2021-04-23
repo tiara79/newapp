@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+{% extends 'base.html' %}
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <title>question_form</title>
+</head>
+<body>
+{% load static %}
+<link rel ="stylesheet" type="text/css" href="{% static '/bootstrap.min.css' %}" >
+<div class="container" >
+<!-- my-3 border-bottom": 밑줄 -->
+  <h4 class="my-3 border-bottom"><br>질문 등록</h4><br>
+  <form method="post" class="post-form">
+<!-- 0414 question_detail.html 에서 csrf_token 범위 불러옴 -->
+  {% csrf_token %}
+  <!-- 유효성검사 ,에러처리부분 0414 -->
+  {% if form.errors %}
+  <div>
+  {% for col in form %}
+    {% if col.errors%}
+    <h3>{{col.label}}</h3>
+    {{ col.errors}}
+    {% endif %}
+  {% endfor %}
+  </div>
+  {% endif %}
+<!-- form의 속성을 p 태그로 묶는다. forms.py의 Meta와 연관이 있다. -->
+<!-- {{ form.as_p }} -->
+     <div class="form-group">
+         <label for="subject"> 제목 </label>
+         <input type="text" class="form-control" name="subject" id="subject" value="">
+     </div>
+     <div class="form-group">
+        <label for="content"> 내용 </label>
+        <textarea class="form-control" name="content" id="content" rows="10"></textarea>
+     </div>
+    <!-- btn btn-primary : 파란색 버튼 -->
+    <button type="submit" class="btn btn-light">저장하기</button>
+  </form>
+</div>
+{% endblock %}
+</body>
+</html>

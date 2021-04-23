@@ -1,0 +1,18 @@
+<!-- 21/04/16 login,logout 의 에러처리페이지  -->
+{% if form.errors %}
+<!-- 데이터 전송 전 체크 하는 부분의 에러처리 -->
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger" >
+                <strong>{{ field.label }}</strong>
+                {{ error }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+<!-- 전송 후 잘못 입력 시 경고문구 출력 -->
+    {% for error in form.non_field_errors %}
+         <div class="alert alert-danger">
+                <strong>{{ error }}</strong>
+         </div>
+    {% endfor %}
+{% endif %}

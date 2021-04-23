@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+{% block script %}
+<script>
+$(document).ready(function(){
+    $(".delete").on('click', function(){
+       if(confirm("정말 삭제 하시겠습니까?")) {
+        location.href= $(this).data('uri');
+         }
+    });
+});
+</script>
+{% endblock %}
+<body>
+<!-- [edit 21/04/20 상세페이지 디자인변경]
+ my-3 : 상하(위아래) 마진값 3
+ py-2 : 상하(위아래) 페딩값 3 x: 좌우, y: 상하
+ p-2 : 상하좌우 패딩값 2
+ white-space: pre-line //텍스트의 개행,(정상적인 출력)
+ d-flex justify-content-end // 요소 오른쪽 정렬 -->
+
+<div class="container my-3">
+    {% if messages %}
+    <div class="alert alert-success" role="alert">
+    {% for message in messages %}
+        <!-- 오류메세지는 딕셔너리 형태로 전송되어 오며,여러개 일시 for 문 사용하여
+             여러줄의 리스트 형태로 출력 하기 위한 부분   -->
+        <strong>{{ massage.tags }}</strong>
+        <ul><li>{{ massage.message}}</li></ul>
+    {% endfor %}
+    </div>
+    {% endif %}
+    <h2 class="border-bottom py-2">{{ question1.subject }}</h2>
+    <div class="card my-3">
+        <div class="card-body">
+            <div class="card-text" style="white-space: pre-line;">{{ question1.content }}</div>
+            <div class="d-flex justify-content-end">
+                <div class="badge badge-light p-2">
+                    <!-- {{ question1.create_date }} -->
+                    <div>{{ question1.author.username }}</div>
+                    <div>{{ question1.create_date }}</div>
+                </div>
+            </div>
+            <!-- 로그인한 사용자와 글쓴이가 같은 경우만 수정 버튼을 출력 -->
+            {% if request.user == question1.author %}
+            <div class="my-3">
+               <a href="{% url 'newapp:question_modify' question1.id %}" class="btn btn-sm btn-outline-secondary">
+                수정 </a>
+               <!-- data-uri 는 js에 onclick과 같은 의미 ,js에 사용하려고 선언 -->
+               <a href="#" class="delete btn btn-sm btn-outline-secondary" data-uri="{% url 'newapp:question_delete' question1.id %}">
+                삭제 </a>
+            </div>
+            {% endif %}
+            <!-- 21/04/22 전은주 질문에 댓글 달기 -->
+            {% if question1.comment_set.count > 0 %}
+            <div class="m-3">
+              {% for comment in question1.comment_set.all %}
+                <div class="comment py-2 text-muted">
+                    <span style="white-space: pre-line;">{{ comment.content }}</span>
+                    <span> -
+                     {{comment.author }},{{ comment.create_date }}
+                     {% if comment.modify_date %}
+                     (수정:{{ comment.modify_date }})
+                     {% endif %}
+                    </span>
+                    {% if request.user == comment.author %}
+                    <a href="{% url 'newapp:comment_modify_question' comment.id %}">수정</a>
+                    <a href="#" class="delete" data-uri="{% url 'newapp:comment_delete_question' comment.id %}">삭제</a>
+                    {% endif %}
+                </div>
+              {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+            <div>
+                <!-- (질문)댓글의 아이디가 없을경우, 댓글이 없을경우 -->
+                <a href="{% url 'newapp:comment_create_question' question1.id %}">댓글추가</a>
+            </div>
+    </div>
+    <h5 class="border-bottom my-3 py-2">{{question1.answer_set.count}} 개의 답변이 있습니다.</h5>
+    {% for answer in question1.answer_set.all %}
+    <div class="card my-3">
+        <div class="card-body">
+            <div class="card-text" style="white-space: pre-line;">{{ answer.content2 }}</div>
+            <div class="d-flex justify-content-end">
+                <!-- badge border선 약간 둥글게 -->
+                <div class="badge badge-light p-2">
+                    <!-- answer.author.username -->
+                    <div>{{ answer.author.username }}</div>
+                    <div>{{ answer.create_date2 }}</div>
+                </div>
+            </div>
+            <!-- 로그인한 사용자와 글쓴이가 같은 경우만 수정 버튼을 출력 -->
+            {% if request.user == answer.author %}
+            <div class="my-3">
+               <a href="{% url 'newapp:answer_modify' answer.id %}" class="btn btn-sm btn-outline-secondary">
+                수정 </a>
+               <!-- data-uri 는 js에 onclick과 같은 의미 ,js에 사용하려고 선언 -->
+               <a href="#"  class="delete btn btn-sm btn-outline-secondary" data-uri="{% url 'newapp:answer_delete' answer.id %}">
+                삭제 </a>
+            </div>
+            {% endif %}
+            <!-- 21/04/22 전은주 답변에 댓글 달기,오후 -->
+            {% if answer.comment_set.count > 0 %}
+            <div class="m-3">
+              {% for comment in answer.comment_set.all %}
+                <div class="comment py-2 text-muted">
+                    <span style="white-space: pre-line;">{{ comment.content }}</span>
+                    <span> -
+                     {{comment.author }},{{ comment.create_date }}
+                     {% if comment.modify_date %}
+                     (수정:{{ comment.modify_date }})
+                     {% endif %}
+                    </span>
+                    {% if request.user == comment.author %}
+                    <a href="{% url 'newapp:comment_modify_answer' comment.id %}">수정</a>
+                    <a href="#" class="delete" data-uri="{% url 'newapp:comment_delete_answer' comment.id %}">삭제</a>
+                    {% endif %}
+                </div>
+              {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+            <div>
+                <!-- (질문)댓글의 아이디가 없을경우, 댓글이 없을경우 -->
+                <a href="{% url 'newapp:comment_create_answer' answer.id %}">댓글추가</a>
+            </div>
+    </div>
+    {% endfor %}
+    <form action="{% url 'newapp:answer_create' question1.id %}" method="post" class="my-3">
+        {% csrf_token %}
+        <div class="form-group">
+            <!-- [edit 21/04/20 ] user가 로그인 하지 않았을때는 사용 못하도록 disabled 지정 -->
+            <textarea {% if not user.is_authenticated %} disabled {% endif %} name="content2"
+                      id="content2" class="form-control" rows="10">
+            </textarea></br>
+        </div>
+        <input type="submit" value="답변등록" class="btn btn-primary">
+    </form>
+ </div>
+<!-- [edit 21/04/21 삭제시 js 처리 ] -->
+{% endblock %}
+</body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- [edit 21/04/22] 댓글 기능 부분- -->
+<div class="container my-3">
+    <h5 class="border-bottom pb-2">댓글 등록 하기</h5>
+    <form method="post" class="post-form">
+        {% csrf_token %}
+        {% include "common/form_errors.html" %}
+        <div class="form-group">
+           <label for="content"> 답변 내용 </label>
+            <!--  해당 값이 없을때 기본값으로 설정함 default_if_none -->
+           <textarea class="form-control" name="content" id="content" rows="10">
+             {{form.content.value|default_if_none:'' }}</textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">저장</button>
+    </form>
+</div>
+{% endblock %}
