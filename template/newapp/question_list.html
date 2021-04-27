@@ -22,8 +22,10 @@ STATICFILES_DIRS =[BASE_DIR/ 'static',] 경로 설정 후  -->
       <tr class="table-danger">
         <th> 글 번 호 </th>
         <th> 제    목 </th>
-        <th> 글 쓴 이 </th>
+        <th> 작 성 자 </th>
         <th> 작성 일자 </th>
+        <!-- [21/04/27] 질문에 대한 추천 갯수 칼럼 추가 -->
+        <th> 추    천 </th>
       </tr>
     </thead>
     <tbody>
@@ -46,8 +48,14 @@ STATICFILES_DIRS =[BASE_DIR/ 'static',] 경로 설정 후  -->
          <span class="text-danger small ml-2">{{ question.answer_set.count }}</span>
          {% endif %}
          </td>
-         <td>{{ question.author_username}}</td>
+         <td>{{ question.author.username}}</td>
          <td>{{ question.create_date}}</td>
+         <!-- [21/04/27] 질문에 대한 추천 갯수 칼럼 추가 -->
+         <td>
+             {% if question.voter.all.count %}
+             <span class="badge badge-waring px-2 py-1">{{ question.voter.all.count }}</span>
+             {% endif %}
+         </td>
      </tr>
     {% endfor %}
     {% else %}

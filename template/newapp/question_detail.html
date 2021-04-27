@@ -42,19 +42,21 @@ $(document).ready(function(){
     {% endif %}
     <h2 class="border-bottom py-2">{{ question1.subject }}</h2>
        <!-- [21/04/26] 추천 부분 생성  -->
-       <div>
+    <div class="row my-3">
+       <div class="col-1" >
          <div class="bg-light text-center p-3 m-1">{{ question1.voter.count }}</div>
          <a href="#" class="recommend btn btn-sm btn-block my-1" data-uri="{% url 'newapp:vote_question' question1.id %}">추천</a>
        </div>
        <!-- vote_question 만들어야 함 urls.py  -->
-    <div class="card my-3">
+    <div class="col-11">
+       <div class="card">
         <div class="card-body">
             <div class="card-text" style="white-space: pre-line;">{{ question1.content }}</div>
             <div class="d-flex justify-content-end">
                 <div class="badge badge-light p-2">
                     <!-- {{ question1.create_date }} -->
-                    <div>{{ question1.author.username }}</div>
-                    <div>{{ question1.create_date }}</div>
+                    <div class="m-1">{{ question1.author.username }}</div><br>
+                    <div class="m-1">{{ question1.create_date }}</div>
                 </div>
             </div>
             <!-- 로그인한 사용자와 글쓴이가 같은 경우만 수정 버튼을 출력 -->
@@ -88,27 +90,31 @@ $(document).ready(function(){
             </div>
             {% endif %}
         </div>
-            <div>
+            <div class="p-3">
                 <!-- (질문)댓글의 아이디가 없을경우, 댓글이 없을경우 -->
-                <a href="{% url 'newapp:comment_create_question' question1.id %}">댓글추가</a>
+                <a href="{% url 'newapp:comment_create_question' question1.id %}"> 댓글추가</a>
             </div>
     </div>
+    </div> <!-- 답변 추천 기능 end -->
+    </div> <!-- 질문 추천 기능 end  -->
     <h5 class="border-bottom my-3 py-2">{{question1.answer_set.count}} 개의 답변이 있습니다.</h5>
     {% for answer in question1.answer_set.all %}
-       <!-- [21/04/27] 추천 부분 생성  -->
-       <div>
+       <!-- [21/04/27] 답변 추천 부분 생성  -->
+    <div class="row my-3">
+       <div class="col-1">
          <div class="bg-light text-center p-3 m-1">{{ answer.voter.count }}</div>
          <a href="#" class="recommend btn btn-sm btn-block my-1" data-uri="{% url 'newapp:vote_answer' answer.id %}">추천</a>
        </div>
-    <div class="card my-3">
+    <div class="col-11">
+    <div class="card">
         <div class="card-body">
             <div class="card-text" style="white-space: pre-line;">{{ answer.content2 }}</div>
             <div class="d-flex justify-content-end">
                 <!-- badge border선 약간 둥글게 -->
                 <div class="badge badge-light p-2">
                     <!-- answer.author.username -->
-                    <div>{{ answer.author.username }}</div>
-                    <div>{{ answer.create_date2 }}</div>
+                    <div class="m-1">{{ answer.author.username }}</div><br>
+                    <div class="m-1">{{ answer.create_date2 }}</div>
                 </div>
             </div>
             <!-- 로그인한 사용자와 글쓴이가 같은 경우만 수정 버튼을 출력 -->
@@ -142,11 +148,13 @@ $(document).ready(function(){
             </div>
             {% endif %}
         </div>
-            <div>
+            <div class="p-3">
                 <!-- (질문)댓글의 아이디가 없을경우, 댓글이 없을경우 -->
-                <a href="{% url 'newapp:comment_create_answer' answer.id %}">댓글추가</a>
+                <a href="{% url 'newapp:comment_create_answer' answer.id %}"> 댓글추가</a>
             </div>
+         </div>
     </div>
+  </div>  <!-- 답변 추천 end-->
     {% endfor %}
     <form action="{% url 'newapp:answer_create' question1.id %}" method="post" class="my-3">
         {% csrf_token %}
