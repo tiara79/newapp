@@ -44,7 +44,7 @@ def index(request):
     return render(request, 'newapp/question_list.html', context)
 
 # urls.py 에서 넘어온 detail()
-def detail(request,question_id):
+def detail(request, question_id):
     # models.py 에 있는 Question
     # urls.py의 question_id와 question.html의 question.id는 같다.
     # 즉 question_id or question.id 사용해도 된다.

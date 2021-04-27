@@ -14,8 +14,8 @@ app_name = 'newapp'
 # 게시글 답변작성 페이지 추가 (한 후 views.py에 함수 만든다)
 
 # ---------------------- [21/04/23 edit] ----------------- #
-from .views import answer_views, base_views, comment_views, question_views
-# ----------------------------------------------- #
+# -----------------------[21/04/27 edit vote_views import 추가]------------------------ #
+from .views import answer_views, base_views, comment_views, question_views, vote_views
 
 urlpatterns = [
     path('', base_views.index, name='index'),
@@ -39,7 +39,9 @@ urlpatterns = [
     path('comment/modify/answer/<int:comment_id>/', comment_views.comment_modify_answer, name='comment_modify_answer'),
     path('comment/delete/answer/<int:comment_id>/', comment_views.comment_delete_answer, name='comment_delete_answer'),
 
-# 2021.04.26 추천기능
-    path('vote/question/<int:question_id>/', vote_views.vote_question, name='vote_question')
+# 2021.04.26 질문 추천 기능 주소 추가
+    path('vote/question/<int:question_id>/', vote_views.vote_question, name='vote_question'),
+# 2021.04.27 답변 추천 기능 주소 추가
+    path('vote/answer/<int:answer_id>/', vote_views.vote_answer, name='vote_answer'),
 ]
 
