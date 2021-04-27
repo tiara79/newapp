@@ -35,6 +35,12 @@ $(document).ready(function(){
     </div>
     {% endif %}
     <h2 class="border-bottom py-2">{{ question1.subject }}</h2>
+       <!-- [21/04/26] 추천 부분 생성  -->
+       <div>
+         <div class="bg-light text-center p-3 m-1">{{ question1.voter.count }}</div>
+         <a href="#" class="recommend btn btn-sm btn-block my-1" class="delete" data-uri="{% url 'newapp:vote_question' question1.id %}">추천</a>
+       </div>
+       <!-- vote_question 만들어야 함 urls.py  -->
     <div class="card my-3">
         <div class="card-body">
             <div class="card-text" style="white-space: pre-line;">{{ question1.content }}</div>
