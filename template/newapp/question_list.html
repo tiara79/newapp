@@ -93,18 +93,21 @@ STATICFILES_DIRS =[BASE_DIR/ 'static',] 경로 설정 후  -->
         {%if page_number == question_list1.number %}
           <!-- from django.core.paginator import Paginator의 .number : 현재 페이지 번호 -->
           <li class="page-item active" aria-current="page">
-              <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+               <!-- [Edit 21/04/28 ] 검색 기능 추가로 인한 페이징 처리방식 변경 -->
+              <a class="page-link" href="#" data-page="{{ page_number }}">{{ page_number }}</a>
           </li>
           {% else %}
           <li class="page-item" >
-              <a class="page-link" href="?page={{ page_number }}" >{{ page_number }}</a>
+               <!-- [Edit 21/04/28 ] 검색 기능 추가로 인한 페이징 처리방식 변경 -->
+              <a class="page-link" href="#" data-page="{{ page_number }}">{{ page_number }}</a>
           </li>
         {% endif %}
       {% endif %}
       {% endfor %}
       {% if question_list1.has_next %}
       <li class="page-item">
-        <a class="page-link" href="?page={{ question_list1.next_page_number }}">다음</a>
+          <!-- [Edit 21/04/28 ] 검색 기능 추가로 인한 페이징 처리방식 변경 -->
+        <a class="page-link" href="#" data-page="{{ question_list1.next_page_number }}">다음</a>
       </li>
       {% else %}
       <li class="page-item disabled" >
