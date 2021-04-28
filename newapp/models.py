@@ -14,6 +14,7 @@ from django.contrib.auth.models import User
 # 저자(글쓴이): author
 
 # Create your models here.
+# 모듈의 컬럼값 선언
 class Question(models.Model):
     subject = models.CharField(max_length=100)
     content = models.TextField()
